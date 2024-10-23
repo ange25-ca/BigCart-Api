@@ -1,0 +1,35 @@
+{
+  "name": "bigcart-api",
+  "version": "1.0.0",
+  "description": "esta api es para consumir bd de la ecommerce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/server.ts"
+  },
+  "keywords": [],
+  "author": "angelica, eliam, antonio",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mysql2": "^3.11.3",
+    "nodejs": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ange25-ca/BigCart-Api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ange25-ca/BigCart-Api/issues"
+  },
+  "homepage": "https://github.com/ange25-ca/BigCart-Api#readme"
+}
