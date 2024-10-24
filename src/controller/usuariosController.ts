@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {registrarUsuario, obtenerPorcorreo } from '../services/usuarioServices';
+import {registrarUsuario, obtenerPorcorreo, obtenerUsuarios } from '../services/usuarioServices';
 import autenticador from '../middleware/autenticador';
 
 interface DatosSeguros {
@@ -53,6 +53,8 @@ async function loginUsuario(req: Request, res: Response): Promise<void> {
     }
 }
 
+
+
 async function _obtenerUsuarioPorNombre(email: string) {
     try {
         const usuario = await obtenerPorcorreo(email);
@@ -63,7 +65,19 @@ async function _obtenerUsuarioPorNombre(email: string) {
     }
 }
 
+//función prueba: Ver todos los usuarios
+async function verUsuarios(req: Request, res: Response): Promise<void> {
+    try {
+        const usuarios = await obtenerUsuarios();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener todos los usuarios:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
 export {
     registrarUsuario,
-    loginUsuario
+    loginUsuario, 
+    verUsuarios
 };
