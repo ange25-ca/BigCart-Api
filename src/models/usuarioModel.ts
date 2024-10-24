@@ -49,3 +49,22 @@ export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
     }
 }
 
+
+// funcion para probar la api y validar que se conecta a la BD 
+export async function obtenerTodosLosUsuarios(): Promise<Usuario[]> {
+    const conexion: PoolConnection = await obtenerConexion();
+    try {
+        // Ejecutar la consulta para obtener todos los usuarios
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
+            'SELECT * FROM usuarios;'
+        );
+        
+        return results;
+    } catch (error) {
+        console.error('Error al obtener todos los usuarios en el modelo:', error);
+        throw error;
+    } finally {
+        conexion.release(); // Liberar la conexión al finalizar
+    }
+}
+

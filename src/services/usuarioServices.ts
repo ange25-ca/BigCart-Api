@@ -1,4 +1,4 @@
-import { registrar, obtenerPorCorreo } from '../models/usuarioModel';
+import { registrar, obtenerPorCorreo, obtenerTodosLosUsuarios } from '../models/usuarioModel';
 
 export async function registrarUsuario(nombre: string, email: string, password: string): Promise<void> {
     try {
@@ -18,3 +18,12 @@ export async function obtenerPorcorreo(nombre: string): Promise<any> {  // Cambi
     }
 }
 
+export async function obtenerUsuarios(): Promise<any[]> {  // Cambia `any[]` por el tipo correspondiente si sabes qué estructura tienen los usuarios
+    try {
+        const usuarios = await obtenerTodosLosUsuarios();
+        return usuarios;
+    } catch (error) {
+        console.error('Error al obtener todos los usuarios en el servicio:', error);
+        throw error;
+    }
+}

@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { Request, Response, NextFunction } from 'express';
+import { RequestPersonalizado } from '../interfaces/requestPersonalizado';
 
 interface UsuarioPayload {
     nombre: string;
@@ -11,7 +12,7 @@ interface UsuarioPayload {
 
 const autenticador = {
 // Middleware para verificar el token
-verificarToken: function (req: Request, res: Response, next: NextFunction): void {
+verificarToken: function (req: RequestPersonalizado, res: Response, next: NextFunction): void {
     const authHeader = req.headers['authorization'];
 
     if (!authHeader) {
