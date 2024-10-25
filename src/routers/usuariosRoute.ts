@@ -1,9 +1,11 @@
+//usuariosRoute.js
+
 import { Router } from "express";
-import { verUsuarios } from "../controller/usuariosController";
-import exp from "constants";
+import { loginUsuario, verUsuarios } from "../controller/usuariosController";
 
 const router: Router = Router();
 
-router.get('/usuarios', verUsuarios);
+router.get('/', verUsuarios);
+router.post('/login', loginUsuario);
 
 export default router;
