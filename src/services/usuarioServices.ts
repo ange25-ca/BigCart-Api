@@ -1,8 +1,8 @@
 import { registrar, obtenerPorCorreo, obtenerTodosLosUsuarios } from '../models/usuarioModel';
 
-export async function registrarUsuario(nombre: string, email: string, password: string): Promise<void> {
+export async function registrarUsuario(nombre: string, password: string): Promise<void> {
     try {
-        await registrar(nombre, email, password);
+        await registrar(nombre, password);
     } catch (error) {
         console.error('Error al registrar usuario en el servicio:', error);
         throw error;

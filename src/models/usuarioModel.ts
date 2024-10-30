@@ -1,5 +1,5 @@
-import { PoolConnection, RowDataPacket } from 'mysql2/promise';
 
+import { PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { obtenerConexion } from '../databases/conexion';
 
 // Tipos para usuarios
@@ -11,7 +11,7 @@ interface Usuario extends RowDataPacket {
 }
 
 // Registrar un nuevo usuario
-export async function registrar(nombre: string, email: string, password: string): Promise<void> {
+export async function registrar(nombre: string, password: string): Promise<void> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         
@@ -19,7 +19,7 @@ export async function registrar(nombre: string, email: string, password: string)
         // Insertar usuario en la base de datos
         await conexion.query(
             'INSERT INTO usuarios (nombre, correo, pass) VALUES (?, ?, ?)', 
-            [nombre, email, password]
+            [nombre, password]
         );
         console.log('Usuario insertado correctamente');
     } catch (error) {

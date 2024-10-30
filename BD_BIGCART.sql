@@ -72,3 +72,22 @@ CREATE TABLE detalleCompra(
     FOREIGN KEY (idCompra) REFERENCES compra(idCompra),
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
+
+-- Se inserta un usuario como prueba 
+INSERT INTO usuarios (nombreUsuario, edad, apellido, email, contraseña, rol)
+VALUES (
+'JuanPerez', 30, 'Perez', 
+'juan.perez@example.com', 
+'password123', 'cliente');
+
+INSERT INTO usuarios (nombreUsuario, edad, apellido, email, contraseña, rol)
+VALUES (
+    'username', 
+    30, 
+    'Perez', 
+    'Username.prueba@example.com', 
+    '23,16,54:12,78,99:10,25,77,65,89,12,43:15,32,78:60,90,18,29,74,51,30,92', 
+    'cliente'
+);
+
+
