@@ -24,8 +24,8 @@ const authMiddleare = {
     console.log(decryptData(encryptedPassword));
 
     // Imprimir en consola el nombre de usuario y la contraseña descifrados
-    console.log("Username descifrado:", resultado.username);
-    console.log("Password descifrado:", resultado.password);
+    //console.log("Username descifrado:", resultado.username);
+    //console.log("Password descifrado:", resultado.password);
 
     return resultado;
 },
