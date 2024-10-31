@@ -10,12 +10,29 @@ interface Usuario extends RowDataPacket {
     pass: string;
 }
 
+// Obtener usuario por nombre
+export async function obtenerPorNombre(nombre: string): Promise<Usuario | null> {
+    const conexion: PoolConnection = await obtenerConexion();
+    try {
+        // Ejecutar la consulta y tipar los resultados como RowDataPacket[]
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
+            'SELECT * FROM usuarios WHERE nombreUsuario = ?;',
+            [nombre]
+        );
+
+        return results.length > 0 ? results[0] : null;
+    } catch (error) {
+        console.error('Error al obtener usuario por nombre en el modelo:', error);
+        throw error;
+    } finally {
+        conexion.release(); // Liberar la conexión al finalizar
+    }
+}
+
 // Registrar un nuevo usuario
 export async function registrar(nombre: string, password: string): Promise<void> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
-        
-
         // Insertar usuario en la base de datos
         await conexion.query(
             'INSERT INTO usuarios (nombre, correo, pass) VALUES (?, ?, ?)', 
