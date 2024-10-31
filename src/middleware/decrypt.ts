@@ -44,15 +44,15 @@ export const decryptData = async (encryptedData: string): Promise<string> => {
     // Decodificar los datos desencriptados
     const decodedData = new TextDecoder().decode(decrypted);
 
+    //Se imprime los datos desencriotados
     console.log("Datos desencriptados:", decodedData);
 
     return decodedData;
 };
 
-export const decryptMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const decryptMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { dataSegura } = req.body; // Obtener el objeto cifrado
-
         // Validación de estructura de `dataSegura`
         if (!dataSegura || !dataSegura.username || !dataSegura.password) {
             res.status(400).send("Formato de datos incorrecto o datos faltantes.");
@@ -60,18 +60,19 @@ export const decryptMiddleware = (req: Request, res: Response, next: NextFunctio
         }
 
         // Imprimir los datos cifrados
-        console.log("Encrypted Username:", dataSegura.username);
-        console.log("Encrypted Password:", dataSegura.password);
+        //console.log("Encrypted Username:", dataSegura.username);
+        //console.log("Encrypted Password:", dataSegura.password);
 
         // Desencriptar `username` y `password`
-        const decryptedUsername = decryptData(dataSegura.username);
-        const decryptedPassword = decryptData(dataSegura.password);
+        const decryptedUsername = await decryptData(dataSegura.username);
+        const decryptedPassword = await decryptData(dataSegura.password);
 
         // Almacenar los datos descifrados en la solicitud para usarlos más tarde
         req.body.decryptedData = {
             username: decryptedUsername,
             password: decryptedPassword,
         };
+        // Permite continuar con el siguiente middleware
         next();
 
     } catch (error) {

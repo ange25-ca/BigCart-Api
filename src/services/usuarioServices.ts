@@ -9,7 +9,7 @@ export async function registrarUsuario(nombre: string, password: string): Promis
     }
 }
 
-export async function obtenerPorcorreo(nombre: string): Promise<any> {  // Cambia `any` por el tipo correspondiente si sabes qué estructura tiene el usuario
+export async function obtenerPorcorreo(nombre: string): Promise<any> {  
     try {
         return await obtenerPorCorreo(nombre);
     } catch (error) {
@@ -18,7 +18,7 @@ export async function obtenerPorcorreo(nombre: string): Promise<any> {  // Cambi
     }
 }
 
-export async function obtenerUsuarios(): Promise<any[]> {  // Cambia `any[]` por el tipo correspondiente si sabes qué estructura tienen los usuarios
+export async function obtenerUsuarios(): Promise<any[]> {  
     try {
         const usuarios = await obtenerTodosLosUsuarios();
         return usuarios;
