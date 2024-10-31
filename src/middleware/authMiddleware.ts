@@ -1,5 +1,5 @@
 
-import { decrypt } from './decrypt'; //
+import { decryptData } from "./decrypt" //
 
 interface UsuarioPayload {
     username: string;
@@ -20,8 +20,8 @@ const authMiddleare = {
     const encryptedUsername = partes[0]; // Username cifrado en la primera posición
     const encryptedPassword = partes[partes.length - 1]; // Password cifrado en la última posición
 
-    resultado.username = decrypt(encryptedUsername).data;
-    resultado.password = decrypt(encryptedPassword).data;
+    console.log(decryptData(encryptedUsername));
+    console.log(decryptData(encryptedPassword));
 
     // Imprimir en consola el nombre de usuario y la contraseña descifrados
     console.log("Username descifrado:", resultado.username);
