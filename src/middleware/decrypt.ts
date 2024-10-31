@@ -52,7 +52,6 @@ export const decryptData = async (encryptedData: string): Promise<string> => {
 export const decryptMiddleware = (req: Request, res: Response, next: NextFunction) => {
     try {
         const { dataSegura } = req.body; // Obtener el objeto cifrado
-        console.log('Data Segura:', dataSegura); // Imprimir para verificar
 
         // Validación de estructura de `dataSegura`
         if (!dataSegura || !dataSegura.username || !dataSegura.password) {
@@ -67,9 +66,6 @@ export const decryptMiddleware = (req: Request, res: Response, next: NextFunctio
         // Desencriptar `username` y `password`
         const decryptedUsername = decryptData(dataSegura.username);
         const decryptedPassword = decryptData(dataSegura.password);
-
-        console.log("Decrypted Username:", decryptedUsername);
-        console.log("Decrypted Password:", decryptedPassword);
 
         // Almacenar los datos descifrados en la solicitud para usarlos más tarde
         req.body.decryptedData = {

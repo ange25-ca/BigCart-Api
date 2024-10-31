@@ -24,8 +24,8 @@ async function loginUsuario(req: Request, res: Response): Promise<void> {
         const datosDescifrados = authMiddleware.verificarDatos(`${dataSegura.username},${dataSegura.password}`);
 
         // Imprime los datos descifrados en consola
-        console.log("Nombre de usuario descifrado:", datosDescifrados.username);
-        console.log("Contraseña descifrada:", datosDescifrados.password);
+        //console.log("Nombre de usuario descifrado:", datosDescifrados.username); no tiene datos   
+        //console.log("Contraseña descifrada:", datosDescifrados.password); no tiene satos
 
         // Aquí puedes proceder a autenticar al usuario con los datos descifrados
         const usuario = await obtenerPorcorreo(datosDescifrados.username); // ejemplo de búsqueda por username
