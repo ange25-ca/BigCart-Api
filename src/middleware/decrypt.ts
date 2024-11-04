@@ -58,11 +58,7 @@ export const decryptMiddleware = async (req: Request, res: Response, next: NextF
             res.status(400).send("Formato de datos incorrecto o datos faltantes.");
             return;
         }
-
-        // Imprimir los datos cifrados
-        //console.log("Encrypted Username:", dataSegura.username);
-        //console.log("Encrypted Password:", dataSegura.password);
-
+        
         // Desencriptar `username` y `password`
         const decryptedUsername = await decryptData(dataSegura.username);
         const decryptedPassword = await decryptData(dataSegura.password);

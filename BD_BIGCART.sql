@@ -2,23 +2,24 @@ CREATE DATABASE  IF NOT EXISTS `bigcart`;
 
 USE  bigCart;
 
-CREATE TABLE usuarios(
+CREATE TABLE usuarios (
     idUsuario INT AUTO_INCREMENT PRIMARY KEY,
     nombreUsuario VARCHAR(50) NOT NULL,
     edad INT NOT NULL, 
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     contraseña VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15) NOT NULL, 
+    direccion VARCHAR(255),       
     rol ENUM('admin', 'cliente') DEFAULT 'cliente'
 );
 
-CREATE TABLE clientes(
+CREATE TABLE clientes (
     idCliente INT AUTO_INCREMENT PRIMARY KEY,
     idUsuario INT NOT NULL UNIQUE,
-    direccion VARCHAR(255) NOT NULL,
-    telefono VARCHAR(20),
     FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)
 );
+
 
 CREATE TABLE categoria(
     idCategoria INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,21 +74,11 @@ CREATE TABLE detalleCompra(
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 
--- Se inserta un usuario como prueba 
-INSERT INTO usuarios (nombreUsuario, edad, apellido, email, contraseña, rol)
-VALUES (
-'JuanPerez', 30, 'Perez', 
-'juan.perez@example.com', 
-'password123', 'cliente');
+ -- DROP DATABASE bigCart;
 
-INSERT INTO usuarios (nombreUsuario, edad, apellido, email, contraseña, rol)
-VALUES (
-    'username', 
-    30, 
-    'Perez', 
-    'Username.prueba@example.com', 
-    '23,16,54:12,78,99:10,25,77,65,89,12,43:15,32,78:60,90,18,29,74,51,30,92', 
-    'cliente'
-);
+
+
+
+
 
 
