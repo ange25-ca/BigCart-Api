@@ -2,23 +2,24 @@ CREATE DATABASE  IF NOT EXISTS `bigcart`;
 
 USE  bigCart;
 
-CREATE TABLE usuarios(
+CREATE TABLE usuarios (
     idUsuario INT AUTO_INCREMENT PRIMARY KEY,
     nombreUsuario VARCHAR(50) NOT NULL,
     edad INT NOT NULL, 
     apellido VARCHAR(50) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     contraseña VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15) NOT NULL, 
+    direccion VARCHAR(255),       
     rol ENUM('admin', 'cliente') DEFAULT 'cliente'
 );
 
-CREATE TABLE clientes(
+CREATE TABLE clientes (
     idCliente INT AUTO_INCREMENT PRIMARY KEY,
     idUsuario INT NOT NULL UNIQUE,
-    direccion VARCHAR(255) NOT NULL,
-    telefono VARCHAR(20),
     FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)
 );
+
 
 CREATE TABLE categoria(
     idCategoria INT AUTO_INCREMENT PRIMARY KEY,
@@ -72,3 +73,12 @@ CREATE TABLE detalleCompra(
     FOREIGN KEY (idCompra) REFERENCES compra(idCompra),
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
+
+ -- DROP DATABASE bigCart;
+
+
+
+
+
+
+
