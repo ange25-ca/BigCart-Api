@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import {obtenerProductos, obtenerPorId} from '../services/productosServices'
-import autenticador from '../middleware/autenticador';
+import {obtenerProductos, obtenerPorId, getForCategoria} from '../services/productosServices'
+
 
 interface producto{
     id: number,
@@ -42,11 +42,30 @@ async function getProduct(req:  Request, res: Response): Promise<void>{
         
 }
 
+async function buscarPorCategoria(req: Request, res: Response): Promise<void> {
+    try{
+        const categoria = parseInt(req.params.categoria, 10);
+        console.log('categoria en modelo:' + categoria);
+        if (isNaN(categoria)) {
+            res.status(400).json({ error: 'El parámetro "categoria" debe ser un número válido' });
+            return; // Terminamos la ejecución aquí si hay error
+        }
+        const productos = await getForCategoria(categoria);
+        if(!productos){
+            res.status(404).json({error: 'No hay productos en esta categoría'});
+        }
+        res.json(productos);
+    } catch(error){
+        res.status(500).json({error: 'Error al obtener productos de la categoría'});
+    }
+}
+
 async function updateStokc() {
     
 }
 
 export{
     verProductos,
-    getProduct
+    getProduct,
+    buscarPorCategoria
 }
