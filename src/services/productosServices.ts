@@ -1,4 +1,4 @@
-import { allProductos, obtenerProductoPorId } from "../models/productoModel";
+import { allProductos, obtenerProductoPorId, buscarPorCategoria } from "../models/productoModel";
 interface ProductoResponse {
     idProducto: number; // ID del producto, coincidente con la tabla
     sku: string; // Código SKU del producto
@@ -25,5 +25,16 @@ export async function obtenerPorId(id : number): Promise<any> {
         return Producto;
     } catch (error) {
         console.log("Error al obtener el producto selecionado")
+    }
+}
+
+export async function getForCategoria(categoria: number): Promise<any> {
+    try {
+        console.log('categoria en servicio:' + categoria);
+        const Productos = await buscarPorCategoria(categoria);
+        return Productos;
+    } catch (error) {
+        console.log('Error al obtener productos por categoria')
+        throw Error;
     }
 }
