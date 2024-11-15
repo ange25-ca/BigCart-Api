@@ -44,9 +44,6 @@ export const decryptData = async (encryptedData: string): Promise<string> => {
     // Decodificar los datos desencriptados
     const decodedData = new TextDecoder().decode(decrypted);
 
-    //Se imprime los datos desencriotados
-    console.log("Datos desencriptados:", decodedData);
-
     return decodedData;
 };
 
