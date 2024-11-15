@@ -28,7 +28,11 @@ async function  loginUsuario(req: Request, res: Response): Promise<void> {
 
         // Verifica las credenciales
         if (usuario && usuario.contraseña === password) {
-            res.status(200).send(`Bienvenido, ${username}!`);
+            // Enviar la respuesta con el id del usuario
+            res.status(200).json({
+                message: `Bienvenido, ${username}!`,
+                userId: usuario.idUsuario 
+            });
         } else {
             res.status(401).send('Credenciales incorrectas');
         }
@@ -48,48 +52,11 @@ async function _obtenerUsuarioPorNombre(username: string) {
     }
 }
 
-/*async function SignUpNewUser(req: Request, res: Response): Promise<void> {
-    const { username, lastname, age, email, phonenumber, address, password } = req.body as DatosSeguros;
-
-    // Validación de datos
-    if (!username || !lastname || !age || !email || !phonenumber || !address || !password) {
-        res.status(400).send('Todos los campos son obligatorios');
-        return; // Salida temprana sin retorno
-    }
-
-    // Asegúrate de que age sea un número
-    const ageNumber = Number(age);
-    if (isNaN(ageNumber)) {
-        res.status(400).send('La edad debe ser un número válido');
-        return; // Salida temprana sin retorno
-    }
-
-    try {
-        console.log(email);
-        
-        // Verifica si el usuario ya existe por email
-        const usuario = await obtenerPorCorreo(email); 
-        if (usuario) {
-            res.status(409).send('El usuario ya está registrado');
-            return; // Salida temprana sin retorno
-        }
-
-        // Registrar el usuario
-        await SignUp(username, lastname, ageNumber, email, phonenumber, address, password); 
-        res.status(201).send('Usuario registrado exitosamente');
-        // No necesitas un return aquí, ya que la función es void
-    } catch (error) {
-        console.error("Error al registrar el usuario:", error);
-        res.status(500).send("Error al registrar el usuario");
-        // No necesitas un return aquí, ya que la función es void
-    }
-}*/
-
 async function SignUpNewUser(req: Request, res: Response): Promise<void> {
     try {
         // Extraer los datos cifrados
         const { dataSegura } = req.body;  //Los datos cifrados vienen en req.body como 'encryptedData'
-        console.log("UsuarioController", dataSegura)
+
         // Verificar y descifrar los datos
         const decryptedData = await authMiddleware.verificarDatos(dataSegura); // Usar el middleware para descifrar los datos
         

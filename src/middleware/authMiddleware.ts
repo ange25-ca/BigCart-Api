@@ -1,40 +1,4 @@
 
-{/*import { decryptData } from "./decrypt" //
-
-interface UsuarioPayload {
-    username: string;
-    lastname: string;
-    age: number;
-    email: string;
-    phonenumber: number;
-    address: string;
-    password: string;
-}
-
-const authMiddleare = {
-    // Función para verificar y descifrar los datos
-    verificarDatos: async function (dataSegura: any): Promise<UsuarioPayload> {
-        // Asegúrate de que `dataSegura` contiene las propiedades esperadas
-        const { username: encryptedUsername, lastname: encryptedLastname, age: encryptedAge, email: encryptedEmail, phonenumber: encryptedPhonenumber, address: encryptedAddress, password: encryptedPassword } = dataSegura;
-
-        if (!encryptedUsername || !encryptedLastname || !encryptedAge || !encryptedEmail || !encryptedPhonenumber || !encryptedAddress || !encryptedPassword) {
-            throw new Error('Datos insuficientes para procesar');
-        }
-
-        // Desencriptar cada campo
-        const username = await decryptData(encryptedUsername);
-        const lastname = await decryptData(encryptedLastname);
-        const age = Number(await decryptData(encryptedAge));
-        const email = await decryptData(encryptedEmail);
-        const phonenumber = Number(await decryptData(encryptedPhonenumber));
-        const address = await decryptData(encryptedAddress);
-        const password = await decryptData(encryptedPassword);
-
-        return { username, lastname, age, email, phonenumber, address, password };
-    },
-};
-export default authMiddleare;*/}
-
 import { decryptData } from "./decrypt"; 
 
 interface UsuarioPayload {
