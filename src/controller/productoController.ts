@@ -42,21 +42,28 @@ async function getProduct(req:  Request, res: Response): Promise<void>{
         
 }
 
-async function buscarPorCategoria(req: Request, res: Response): Promise<void> {
-    try{
+ async function buscarPorCategoria(req: Request, res: Response) {
+    try {
         const categoria = parseInt(req.params.categoria, 10);
         console.log('categoria en modelo:' + categoria);
+
         if (isNaN(categoria)) {
             res.status(400).json({ error: 'El parámetro "categoria" debe ser un número válido' });
             return; // Terminamos la ejecución aquí si hay error
         }
+
         const productos = await getForCategoria(categoria);
-        if(!productos){
-            res.status(404).json({error: 'No hay productos en esta categoría'});
+
+        if (!productos || productos.length === 0) {
+            res.status(404).json({ error: 'No hay productos en esta categoría' });
+            return; // Terminamos la ejecución aquí si no hay productos
         }
-        res.json(productos);
-    } catch(error){
-        res.status(500).json({error: 'Error al obtener productos de la categoría'});
+
+        res.json(productos); // Solo se ejecuta si hay productos
+
+    } catch (error) {
+        console.error("Error en el controlador:", error);
+        res.status(500).json({ error: 'Error al obtener productos de la categoría' });
     }
 }
 
