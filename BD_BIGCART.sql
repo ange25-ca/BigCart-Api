@@ -14,13 +14,6 @@ CREATE TABLE usuarios (
     rol ENUM('admin', 'cliente') DEFAULT 'cliente'
 );
 
-CREATE TABLE clientes (
-    idCliente INT AUTO_INCREMENT PRIMARY KEY,
-    idUsuario INT NOT NULL UNIQUE,
-    FOREIGN KEY (idUsuario) REFERENCES usuarios(idUsuario)
-);
-
-
 CREATE TABLE categoria(
     idCategoria INT AUTO_INCREMENT PRIMARY KEY,
     nombreCategoria VARCHAR(50) NOT NULL,
@@ -45,7 +38,7 @@ CREATE TABLE carritoCompras(
     idCliente INT NOT NULL,
     total DECIMAL(10,2) NOT NULL,
     estadoCarrito VARCHAR(30) not null,
-    FOREIGN KEY (idCliente) REFERENCES clientes(idCliente)
+    FOREIGN KEY (idCliente) REFERENCES usuarios(idUsuario)
 );
 
 CREATE TABLE carritoProducto(
@@ -62,7 +55,7 @@ CREATE TABLE compra(
     idCliente INT NOT NULL,
     fechaCompra DATE NOT NULL,
     total DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (idCliente) REFERENCES clientes(idCliente)
+    FOREIGN KEY (idCliente) REFERENCES usuarios(idUsuario)
 );
 
 CREATE TABLE detalleCompra(
