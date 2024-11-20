@@ -57,7 +57,7 @@ export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         const [results] = await conexion.query<Usuario[] & RowDataPacket[]>( 
-            'select * from clientes join usuarios on clientes.idUsuario = usuarios.idUsuario where email = ?;', 
+            'SELECT * FROM usuarios WHERE email = ?;', 
             [email]
         );
         
