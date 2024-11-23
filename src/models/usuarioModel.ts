@@ -4,7 +4,7 @@ import { obtenerConexion } from '../databases/conexion';
 
 // Tipos para usuarios
 interface Usuario extends RowDataPacket {
-    id: number;
+    idUsuario: number;
     username: string;
     lastname: string;
     age: number;
@@ -45,7 +45,6 @@ export async function SignUp(username: string, lastname: string, age: number, em
             'INSERT INTO usuarios (nombreUsuario, apellido, edad, email, telefono, direccion, contraseña) VALUES (?, ?, ?, ?, ?, ?, ?)', 
             [username, lastname, age, email, phonenumber, adress, password]
         );
-        console.log('Usuario insertado correctamente');
     } catch (error) {
         console.error('Error al insertar usuario en el modelo:', error);
         throw error;
@@ -54,29 +53,11 @@ export async function SignUp(username: string, lastname: string, age: number, em
     }
 }
 
-// Obtener usuario por correo
-{/*export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
-    const conexion: PoolConnection = await obtenerConexion();
-    try {
-        // Ejecutar la consulta y tipar los resultados como RowDataPacket[]
-        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
-            'select * from clientes join usuarios on clientes.idUsuario = usuarios.idUsuario where email = ?;', 
-            [email]
-        );
-        
-        return results.length > 0 ? results[0] : null;
-    } catch (error) {
-        console.error('Error al obtener usuario por correo en el modelo:', error);
-        throw error;
-    } finally {
-        conexion.release(); // Liberar la conexión al finalizar
-    }
-}*/}
 export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         const [results] = await conexion.query<Usuario[] & RowDataPacket[]>( 
-            'select * from clientes join usuarios on clientes.idUsuario = usuarios.idUsuario where email = ?;', 
+            'SELECT * FROM usuarios WHERE email = ?;', 
             [email]
         );
         
