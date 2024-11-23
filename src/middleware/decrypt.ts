@@ -44,9 +44,6 @@ export const decryptData = async (encryptedData: string): Promise<string> => {
     // Decodificar los datos desencriptados
     const decodedData = new TextDecoder().decode(decrypted);
 
-    //Se imprime los datos desencriotados
-    console.log("Datos desencriptados:", decodedData);
-
     return decodedData;
 };
 
@@ -54,18 +51,30 @@ export const decryptMiddleware = async (req: Request, res: Response, next: NextF
     try {
         const { dataSegura } = req.body; // Obtener el objeto cifrado
         // Validación de estructura de `dataSegura`
-        if (!dataSegura || !dataSegura.username || !dataSegura.password) {
+        if (!dataSegura || !dataSegura.username || !dataSegura.lastname ||
+            !dataSegura.age || !dataSegura.email || !dataSegura. phonenumber ||
+            !dataSegura.password || !dataSegura.password) {
             res.status(400).send("Formato de datos incorrecto o datos faltantes.");
             return;
         }
         
         // Desencriptar `username` y `password`
         const decryptedUsername = await decryptData(dataSegura.username);
+        const decryptedLastname = await decryptData(dataSegura.lastname);
+        const decryptedAge = await decryptData(dataSegura.age);
+        const decryptedEmail = await decryptData(dataSegura.Email);
+        const decryptedPhonenumber = await decryptData(dataSegura.phonenumber);
+        const decryptedAddress = await decryptData(dataSegura.address);
         const decryptedPassword = await decryptData(dataSegura.password);
 
         // Almacenar los datos descifrados en la solicitud para usarlos más tarde
         req.body.decryptedData = {
             username: decryptedUsername,
+            lastname: decryptedLastname,
+            age: decryptedAge,
+            email: decryptedEmail,
+            phonenumber: decryptedPhonenumber,
+            address: decryptedAddress,
             password: decryptedPassword,
         };
         // Permite continuar con el siguiente middleware

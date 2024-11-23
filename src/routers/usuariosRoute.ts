@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 // Ruta para loginUsuario
-router.post('/loginUsuario', decryptMiddleware, loginUsuario);
+router.post('/loginUsuario', loginUsuario);
 // Ruta para SignUp
 router.post('/signUpUsuario', SignUpNewUser);
 router.get('/verUsuarios', verUsuarios); // Usa la función verUsuarios
