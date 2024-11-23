@@ -1,6 +1,17 @@
 import { Request, Response } from 'express';
-import { agregarAlCarrito } from '../services/carritoServices';
+import { agregarAlCarrito, allCartProductsService} from '../services/carritoServices';
 
+interface CarritoProducto {
+    idProducto: number;
+    Cantidad: number;
+    nombreProducto: string;
+    descripcion: string;
+    precio: number;
+    idCarrito: number;
+    idCliente: number;
+    totalCarrito: number;
+    estadoCarrito: string;
+}
 export async function addToCart(req: Request, res: Response): Promise<void> {
     try {
         // Extraer datos del cuerpo de la solicitud
@@ -31,3 +42,33 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
     }
 }
 
+export async function viewAllCartProductos(req: Request, res: Response): Promise<void> {
+    try {
+        const idCart = parseInt(req.params.idCart, 10);
+
+        console.log("Este es el idCarrito:", idCart);
+        const carritoData: CarritoProducto[] = await allCartProductsService(idCart);
+
+
+    // Separar detalles del carrito e items
+    if (carritoData.length > 0) {
+        const { idCarrito, idCliente, totalCarrito, estadoCarrito } = carritoData[0];
+        const detallesCarrito = { idCarrito, idCliente, totalCarrito, estadoCarrito };
+
+        const itemsCarrito = carritoData.map((item: CarritoProducto) => ({
+            idProducto: item.idProducto,
+            cantidad: item.Cantidad,
+            nombreProducto: item.nombreProducto,
+            descripcion: item.descripcion,
+            precio: item.precio,
+        }));
+
+        res.json({ detallesCarrito, itemsCarrito });
+    } else {
+        res.status(404).json({ message: "Carrito no encontrado" });
+    }
+    } catch (error) {
+        console.error('Error al obtener productos del carrito:', error);
+        res.status(500).send('Error al obtener productos del carrito');
+    }
+}
