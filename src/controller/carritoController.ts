@@ -7,6 +7,7 @@ interface CarritoProducto {
     nombreProducto: string;
     descripcion: string;
     precio: number;
+    imagenUrl: string;
     idCarrito: number;
     idCliente: number;
     totalCarrito: number;
@@ -61,6 +62,7 @@ export async function viewAllCartProductos(req: Request, res: Response): Promise
             nombreProducto: item.nombreProducto,
             descripcion: item.descripcion,
             precio: item.precio,
+            imagen: item.imagenUrl,
         }));
 
         res.json({ detallesCarrito, itemsCarrito });
