@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { obtenerUsuarios } from '../services/usuarioServices';
 import authMiddleware from '../middleware/authMiddleware';
 import { obtenerPorNombre, obtenerPorCorreo, SignUp } from '../models/usuarioModel';
+import jwt from 'jsonwebtoken';
 
 interface DatosSeguros {
     //Se resiven dos pora el manejo del login
@@ -28,12 +29,13 @@ async function  loginUsuario(req: Request, res: Response): Promise<void> {
 
         // Verifica las credenciales
         if (usuario && usuario.contraseña === password) {
-            // Enviar la respuesta con el id del usuario
+            const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 message: `Bienvenido, ${username}!`,
-                userId: usuario.idUsuario 
+                token,
+                userId: usuario.idUsuario,
             });
-        } else {
+        }  else {
             res.status(401).send('Credenciales incorrectas');
         }
     } catch (error) {
