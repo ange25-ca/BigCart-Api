@@ -7,7 +7,7 @@ interface CarritoProducto {
     nombreProducto: string;
     descripcion: string;
     precio: number;
-    imagenUrl: string;
+    imagenUrl: string; //se agrega el url de la imagen 
     idCarrito: number;
     idCliente: number;
     totalCarrito: number;
