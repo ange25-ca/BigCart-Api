@@ -22,16 +22,18 @@ CREATE TABLE categoria(
 
 
 CREATE TABLE productos(
-    idProducto Int AUTO_INCREMENT PRIMARY KEY,
-    sku VARCHAR (15) NOT NULL,
+    idProducto INT AUTO_INCREMENT PRIMARY KEY,
+    sku VARCHAR(15) NOT NULL,
     nombreProducto VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     descripcion VARCHAR(255) NOT NULL,
+    rating DECIMAL(2,1) DEFAULT 0.0 CHECK (rating BETWEEN 0.0 AND 5.0),
     imagenUrl VARCHAR(255),
     stock INT NOT NULL,
-    idCategoria int not null,
+    idCategoria INT NOT NULL,
     FOREIGN KEY (idCategoria) REFERENCES categoria(idCategoria)
 );
+
 
 CREATE TABLE carritoCompras(
     idCarrito INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,7 +69,7 @@ CREATE TABLE detalleCompra(
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 
- -- DROP DATABASE bigCart;
+-- DROP DATABASE bigCart;
 
 
 

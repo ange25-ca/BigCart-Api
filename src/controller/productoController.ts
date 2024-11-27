@@ -11,6 +11,7 @@ interface ProductoResponse {
     nombreProducto: string; // Nombre del producto
     precio: number; // Precio del producto
     descripcion: string; // Descripción del producto
+    rating: number; // calificación del producto
     imagenUrl?: string; // URL de la imagen (puede ser opcional si aún no está disponible)
     stock: number; // Cantidad en inventario
     idCategoria: number; // ID de la categoría (clave foránea)
