@@ -11,6 +11,7 @@ interface Producto extends RowDataPacket {
   nombreProducto: string;
   precio: number;
   descripcion: string;
+  rating: number;
   imagen: string;
   stock: number;
   idCategoria: number;
