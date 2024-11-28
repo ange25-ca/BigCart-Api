@@ -1,9 +1,18 @@
+//usuariosRoute.js
 import { Router } from "express";
-import { verUsuarios } from "../controller/usuariosController";
-import exp from "constants";
+import { loginUsuario, SignUpNewUser, verUsuarios } from "../controller/usuariosController";
+import { decryptMiddleware } from "../middleware/decrypt";
 
 const router: Router = Router();
 
-router.get('/usuarios', verUsuarios);
+router.get('/', (req, res) => {
+    res.send('Bienvenido a la API');
+});
+
+// Ruta para loginUsuario
+router.post('/loginUsuario', loginUsuario);
+// Ruta para SignUp
+router.post('/signUpUsuario', SignUpNewUser);
+router.get('/verUsuarios', verUsuarios); // Usa la función verUsuarios
 
 export default router;

@@ -1,27 +1,50 @@
-import { PoolConnection, RowDataPacket } from 'mysql2/promise';
 
+import { PoolConnection, RowDataPacket } from 'mysql2/promise';
 import { obtenerConexion } from '../databases/conexion';
 
 // Tipos para usuarios
 interface Usuario extends RowDataPacket {
-    id: number;
-    nombre: string;
+    idUsuario: number;
+    username: string;
+    lastname: string;
+    age: number;
+    email: string;
+    phonenumber: number;
+    adress: string;
+    password: string;
     correo: string;
     pass: string;
 }
 
-// Registrar un nuevo usuario
-export async function registrar(nombre: string, email: string, password: string): Promise<void> {
+// Obtener usuario por nombre
+export async function obtenerPorNombre(username: string): Promise<Usuario | null> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
-        
+        // Ejecutar la consulta y tipar los resultados como RowDataPacket[]
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
+            'SELECT * FROM usuarios WHERE nombreUsuario = ?;',
+            [username]
+        );
 
+        return results.length > 0 ? results[0] : null;
+    } catch (error) {
+        console.error('Error al obtener usuario por nombre en el modelo:', error);
+        throw error;
+    } finally {
+        conexion.release(); // Liberar la conexión al finalizar
+    }
+}
+
+// Registrar un nuevo usuario
+export async function SignUp(username: string, lastname: string, age: number, email:string, 
+    phonenumber:number, adress: string, password: string): Promise<void> {
+    const conexion: PoolConnection = await obtenerConexion();
+    try {
         // Insertar usuario en la base de datos
         await conexion.query(
-            'INSERT INTO usuarios (nombre, correo, pass) VALUES (?, ?, ?)', 
-            [nombre, email, password]
+            'INSERT INTO usuarios (nombreUsuario, apellido, edad, email, telefono, direccion, contraseña) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+            [username, lastname, age, email, phonenumber, adress, password]
         );
-        console.log('Usuario insertado correctamente');
     } catch (error) {
         console.error('Error al insertar usuario en el modelo:', error);
         throw error;
@@ -30,13 +53,11 @@ export async function registrar(nombre: string, email: string, password: string)
     }
 }
 
-// Obtener usuario por correo
 export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
-        // Ejecutar la consulta y tipar los resultados como RowDataPacket[]
-        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
-            'select * from clientes join usuarios on clientes.idUsuario = usuarios.idUsuario where email = ?;', 
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>( 
+            'SELECT * FROM usuarios WHERE email = ?;', 
             [email]
         );
         
@@ -45,7 +66,7 @@ export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
         console.error('Error al obtener usuario por correo en el modelo:', error);
         throw error;
     } finally {
-        conexion.release(); // Liberar la conexión al finalizar
+        conexion.release();
     }
 }
 
