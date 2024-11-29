@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { obtenerUsuarios } from '../services/usuarioServices';
 import authMiddleware from '../middleware/authMiddleware';
-import { obtenerPorNombre, obtenerPorCorreo, SignUp } from '../models/usuarioModel';
+import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId } from '../models/usuarioModel';
 import jwt from 'jsonwebtoken';
 
 interface DatosSeguros {
@@ -101,6 +101,31 @@ async function SignUpNewUser(req: Request, res: Response): Promise<void> {
     }
 }
 
+
+async function obtenerDatosUsuario(req: Request, res: Response): Promise<void> {
+    try {
+        // Accede a userId desde res.locals (que se estableció en el middleware)
+        const userId = res.locals.userId; 
+
+        if (!userId) {
+            res.status(400).send('ID de usuario no proporcionado');
+            return;
+        }
+
+        const usuario = await obtenerUsuarioPorId(userId);
+
+        if (!usuario) {
+            res.status(404).send('Usuario no encontrado');
+            return;
+        }
+
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error('Error al obtener datos del usuario:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
 // Función prueba: Ver todos los usuarios
 async function verUsuarios(req: Request, res: Response): Promise<void> {
     try {
@@ -114,5 +139,6 @@ async function verUsuarios(req: Request, res: Response): Promise<void> {
 export {
     loginUsuario,
     SignUpNewUser,
+    obtenerDatosUsuario,
     verUsuarios
 };

@@ -26,7 +26,7 @@ const verifyMiddleware = async (req: Request, res: Response, next: NextFunction)
         const secretKey = process.env.JWT_SECRET || 'secret'; // Clave secreta desde .env o predeterminada
         const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
-        // Si necesitas usar `userId` directamente en otras funciones, puedes pasarlo con `res.locals`
+        // Guarda el userId en res.locals para accederlo en las siguientes funciones
         res.locals.userId = decoded.userId;
 
         // Continúa con la siguiente función

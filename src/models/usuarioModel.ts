@@ -70,6 +70,24 @@ export async function obtenerPorCorreo(email: string): Promise<Usuario | null> {
     }
 }
 
+// Función para obtener un usuario por ID
+export async function obtenerUsuarioPorId(idUsuario: number): Promise<Usuario | null> {
+    const conexion: PoolConnection = await obtenerConexion(); // Usa obtenerConexion
+    try {
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
+            'SELECT idUsuario, username, email, adress FROM usuarios WHERE idUsuario = ?;',
+            [idUsuario]
+        );
+
+        return results.length > 0 ? results[0] : null; // Devuelve el usuario o null
+    } catch (error) {
+        console.error('Error al obtener usuario por ID:', error);
+        throw error; // Lanza el error para que se maneje en otro lugar
+    } finally {
+        conexion.release(); // Libera la conexión
+    }
+}
+
 
 // funcion para probar la api y validar que se conecta a la BD 
 export async function obtenerTodosLosUsuarios(): Promise<Usuario[]> {
