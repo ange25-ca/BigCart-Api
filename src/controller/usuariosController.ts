@@ -113,7 +113,6 @@ async function obtenerDatosUsuario(req: Request, res: Response): Promise<void> {
         }
 
         const usuario = await obtenerUsuarioPorId(userId);
-
         if (!usuario) {
             res.status(404).send('Usuario no encontrado');
             return;

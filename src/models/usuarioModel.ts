@@ -75,14 +75,14 @@ export async function obtenerUsuarioPorId(idUsuario: number): Promise<Usuario | 
     const conexion: PoolConnection = await obtenerConexion(); // Usa obtenerConexion
     try {
         const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
-            'SELECT idUsuario, username, email, adress FROM usuarios WHERE idUsuario = ?;',
+            'SELECT idUsuario, nombreUsuario, edad, apellido, email, telefono, direccion FROM usuarios WHERE idUsuario = ?;',
             [idUsuario]
         );
 
         return results.length > 0 ? results[0] : null; // Devuelve el usuario o null
     } catch (error) {
         console.error('Error al obtener usuario por ID:', error);
-        throw error; // Lanza el error para que se maneje en otro lugar
+        throw error; 
     } finally {
         conexion.release(); // Libera la conexión
     }
