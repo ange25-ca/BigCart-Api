@@ -30,6 +30,7 @@ async function  loginUsuario(req: Request, res: Response): Promise<void> {
         // Verifica las credenciales
         if (usuario && usuario.contraseña === password) {
             const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
+            const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 message: `Bienvenido, ${username}!`,
                 token,
