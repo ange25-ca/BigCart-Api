@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { obtenerUsuarios } from '../services/usuarioServices';
 import authMiddleware from '../middleware/authMiddleware';
-import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId } from '../models/usuarioModel';
+import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId, actualizarImagenPerfil } from '../models/usuarioModel';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 
 interface DatosSeguros {
     //Se resiven dos pora el manejo del login
@@ -29,7 +30,6 @@ async function  loginUsuario(req: Request, res: Response): Promise<void> {
 
         // Verifica las credenciales
         if (usuario && usuario.contraseña === password) {
-            const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
             const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
             res.status(200).json({
                 message: `Bienvenido, ${username}!`,
@@ -112,19 +112,48 @@ async function obtenerDatosUsuario(req: Request, res: Response): Promise<void> {
             res.status(400).send('ID de usuario no proporcionado');
             return;
         }
-
         const usuario = await obtenerUsuarioPorId(userId);
         if (!usuario) {
             res.status(404).send('Usuario no encontrado');
             return;
         }
-
         res.status(200).json(usuario);
     } catch (error) {
         console.error('Error al obtener datos del usuario:', error);
         res.status(500).send('Error interno del servidor');
     }
 }
+
+export const actualizarPerfil = async (req: Request, res: Response): Promise<void> => { 
+    const { idUsuario } = req.params;  // Obtén el idUsuario desde los parámetros de la URL
+    const profileImage = req.file ? req.file.filename : null;  // Obtén solo el nombre del archivo
+
+    if (!profileImage) {
+        res.status(400).json({ message: 'No se ha subido una imagen.' });
+        return;
+    }
+
+    try {
+        // Genera la URL pública de la imagen
+        let publicImagePath = path.join('/images', profileImage);
+
+        // Reemplazar las barras invertidas por barras diagonales
+        publicImagePath = publicImagePath.replace(/\\/g, '/');
+
+        // Actualiza la imagen en la base de datos
+        await actualizarImagenPerfil(Number(idUsuario), publicImagePath); // Aquí actualizas la base de datos
+
+        // Responde con la URL pública
+        res.status(200).json({
+            message: 'Imagen de perfil actualizada correctamente.',
+            profileImage: publicImagePath,  // Responde con 'profileImage'
+        });
+    } catch (error) {
+        console.error('Error al actualizar la imagen de perfil:', error);
+        res.status(500).json({ message: 'Error al actualizar la imagen de perfil.' });
+    }
+};
+
 
 // Función prueba: Ver todos los usuarios
 async function verUsuarios(req: Request, res: Response): Promise<void> {
