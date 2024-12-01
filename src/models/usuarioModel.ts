@@ -75,7 +75,7 @@ export async function obtenerUsuarioPorId(idUsuario: number): Promise<Usuario | 
     const conexion: PoolConnection = await obtenerConexion(); // Usa obtenerConexion
     try {
         const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
-            'SELECT idUsuario, nombreUsuario, edad, apellido, email, telefono, direccion FROM usuarios WHERE idUsuario = ?;',
+            'SELECT idUsuario, nombreUsuario, edad, apellido, email, telefono, direccion, perfilImagen FROM usuarios WHERE idUsuario = ?;',
             [idUsuario]
         );
 
@@ -107,3 +107,20 @@ export async function obtenerTodosLosUsuarios(): Promise<Usuario[]> {
     }
 }
 
+//Actualización de la imagen 
+// Función para actualizar la imagen de perfil del usuario
+export async function actualizarImagenPerfil(idUsuario: number, profileImage: string): Promise<void> {
+    const conexion: PoolConnection = await obtenerConexion();
+    try {
+        // Realizamos la consulta para actualizar el campo perfileImagen en la base de datos
+        await conexion.query(
+            'UPDATE usuarios SET perfilImagen = ? WHERE idUsuario = ?;',
+            [profileImage, idUsuario]
+        );
+    } catch (error) {
+        console.error('Error al actualizar la imagen de perfil:', error);
+        throw error;
+    } finally {
+        conexion.release();
+    }
+}

@@ -13,11 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "@types/multer": "^1.4.12",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.3",
     "nodejs": "^0.0.0"
   },

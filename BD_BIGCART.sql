@@ -10,7 +10,8 @@ CREATE TABLE usuarios (
     email VARCHAR(100) NOT NULL UNIQUE,
     contraseña VARCHAR(100) NOT NULL,
     telefono VARCHAR(15) NOT NULL, 
-    direccion VARCHAR(255),       
+    direccion VARCHAR(255),  
+    perfilImagen VARCHAR (255) DEFAULT NULL,
     rol ENUM('admin', 'cliente') DEFAULT 'cliente'
 );
 
@@ -69,7 +70,7 @@ CREATE TABLE detalleCompra(
     FOREIGN KEY (idProducto) REFERENCES productos(idProducto)
 );
 
--- DROP DATABASE bigCart;
+ -- DROP DATABASE bigCart;
 
 
 

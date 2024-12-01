@@ -17,6 +17,8 @@ app.use('/', routes);
 
 // Permite el acceso a la carpeta public para la visualización de las imagenes
 app.use(express.static(path.join(__dirname, '..', 'public')));
+// Servir imágenes estáticas desde una carpeta
+app.use('/images', express.static(path.join(__dirname, '..', 'private', 'image', 'imageUser')));
 
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
