@@ -15,11 +15,12 @@ const storage = multer.diskStorage({
     cb(null, uploadPath); // Establecer el destino para el archivo subido
   },
   filename: (req, file, cb) => {
-    const filename = `profileImage-${Date.now()}-${file.originalname}`;
-    cb(null, filename); // Nombre del archivo
+    // Asegúrate de que el idUsuario esté presente en la solicitud
+    const idUsuario = req.params.idUsuario || req.body.idUsuario; // Ajusta según cómo lo pases en la solicitud
+    const filename = `${idUsuario}-${file.originalname}`;
+    cb(null, filename); // Nombre del archivo con el idUsuario
   }
 });
-
 
 // Configuración de multer
 const upload = multer({ storage });
