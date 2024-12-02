@@ -130,7 +130,7 @@ async function obtenerDatosUsuario(req: Request, res: Response): Promise<void> {
 
 export const actualizarPerfil = async (req: Request, res: Response): Promise<void> => {
     const { idUsuario } = req.params;
-    const { username, email, lastname, age, phonenumber, adress } = req.body; // Datos del usuario a actualizar
+    const { username, email, lastname, age, phonenumber, address } = req.body; // Datos del usuario a actualizar
     const profileImage = req.file ? req.file.filename : null; // Imagen de perfil (si se proporciona)
 
     try {
@@ -165,7 +165,7 @@ export const actualizarPerfil = async (req: Request, res: Response): Promise<voi
         }
 
         // Actualizar otros datos del usuario si se enviaron
-        const updateData = { username, lastname, age, email, phonenumber, adress };
+        const updateData = { username, lastname, age, email, phonenumber, address };
         await actualizarUsuario(Number(idUsuario), updateData);
 
         // Responder con un mensaje de éxito y la nueva imagen (si se actualizó)
