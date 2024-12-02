@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { obtenerUsuarios } from '../services/usuarioServices';
 import authMiddleware from '../middleware/authMiddleware';
-import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId, actualizarImagenPerfil, obtenerImagenPerfil } from '../models/usuarioModel';
+import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId, actualizarImagenPerfil, obtenerImagenPerfil, actualizarUsuario } from '../models/usuarioModel';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 import fs from 'fs';
@@ -127,55 +127,58 @@ async function obtenerDatosUsuario(req: Request, res: Response): Promise<void> {
     }
 }
 
-export const actualizarPerfil = async (req: Request, res: Response): Promise<void> => { 
-    const { idUsuario } = req.params;  // Obtén el idUsuario desde los parámetros de la URL
-    const profileImage = req.file ? req.file.filename : null;  // Obtén solo el nombre del archivo
 
-    if (!profileImage) {
-        res.status(400).json({ message: 'No se ha subido una imagen.' });
-        return;
-    }
+export const actualizarPerfil = async (req: Request, res: Response): Promise<void> => {
+    const { idUsuario } = req.params;
+    const { username, email, lastname, age, phonenumber, adress } = req.body; // Datos del usuario a actualizar
+    const profileImage = req.file ? req.file.filename : null; // Imagen de perfil (si se proporciona)
 
     try {
-        // Obtener la imagen de perfil anterior desde la base de datos
-        const imagenAnterior = await obtenerImagenPerfil(Number(idUsuario));  
+        // Actualizar imagen si se envió una nueva imagen
+        if (profileImage) {
 
-        if (imagenAnterior) {
-            const uploadPath = path.resolve(__dirname, '../../private/image/imageUser');  // Ruta base del backend
-            let imagenPathAnterior = path.join(uploadPath, imagenAnterior);  // Ruta completa del archivo anterior
+            // Obtener la imagen anterior desde la base de datos
+            const imagenAnterior = await obtenerImagenPerfil(Number(idUsuario));
 
-            // Asegúrate de que la ruta no tenga una carpeta extra 'images'
-            if (imagenAnterior.includes('images')) {
-                //Si lo tiene se lo reempaza
-                imagenPathAnterior = path.join(uploadPath, imagenAnterior.replace('images/', ''));
+            if (imagenAnterior) {
+                const uploadPath = path.resolve(__dirname, '../../private/image/imageUser');
+                let imagenPathAnterior = path.join(uploadPath, imagenAnterior);
+
+                if (imagenAnterior.includes('images')) {
+                    imagenPathAnterior = path.join(uploadPath, imagenAnterior.replace('images/', ''));
+                }
+
+                // Verifica si el archivo existe y elimina la imagen anterior
+                if (fs.existsSync(imagenPathAnterior)) {
+                    fs.unlinkSync(imagenPathAnterior); // Elimina la imagen anterior
+                } else {
+                    console.log('No se encontró la imagen anterior.');
+                }
             }
 
-            // Verifica si el archivo realmente existe en el sistema de archivos
-            if (fs.existsSync(imagenPathAnterior)) {
-                fs.unlinkSync(imagenPathAnterior);  // Eliminar la imagen anterior
-            } else {
-            }
+            // Genera la URL pública de la nueva imagen
+            let publicImagePath = path.join('/images', profileImage);
+            publicImagePath = publicImagePath.replace(/\\/g, '/');
+
+            // Actualiza la imagen de perfil en la base de datos
+            await actualizarImagenPerfil(Number(idUsuario), publicImagePath);
         }
 
-        // Genera la URL pública de la nueva imagen
-        let publicImagePath = path.join('/images', profileImage);  // Para usar en la URL pública
-        publicImagePath = publicImagePath.replace(/\\/g, '/');  // Asegura la ruta correcta en los -> /
+        // Actualizar otros datos del usuario si se enviaron
+        const updateData = { username, lastname, age, email, phonenumber, adress };
+        await actualizarUsuario(Number(idUsuario), updateData);
 
-        // Actualiza la imagen de perfil en la base de datos
-        await actualizarImagenPerfil(Number(idUsuario), publicImagePath);
-
-        // Responde con la URL pública de la nueva imagen
+        // Responder con un mensaje de éxito y la nueva imagen (si se actualizó)
         res.status(200).json({
-            message: 'Imagen de perfil actualizada correctamente.',
-            profileImage: publicImagePath,
+            message: 'Perfil actualizado correctamente.',
+            profileImage: profileImage ? `/images/${profileImage}` : undefined, // Devuelve la nueva imagen si se actualizó
         });
-        
+
     } catch (error) {
-        console.error('Error al actualizar la imagen de perfil:', error);
-        res.status(500).json({ message: 'Error al actualizar la imagen de perfil.' });
+        console.error('Error al actualizar el perfil:', error);
+        res.status(500).json({ message: 'Error al actualizar el perfil.' });
     }
 };
-
 export {
     loginUsuario,
     SignUpNewUser,

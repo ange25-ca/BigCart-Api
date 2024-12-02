@@ -144,3 +144,63 @@ export async function obtenerImagenPerfil(idUsuario: number): Promise<string | n
         conexion.release(); // Liberar la conexión una vez finalizado
     }
 }
+
+// Actualizar los datos del usuario
+export async function actualizarUsuario(idUsuario: number, data: { username?: string, 
+    lastname?: string, 
+    edad?: number, 
+    email?: string, 
+    telefono?: number, 
+    direccion?: string, 
+    profileImage?: string }): Promise<void> {
+    const conexion: PoolConnection = await obtenerConexion();
+    try {
+        // Genera las partes de la consulta dinámica
+        const setClause = [];
+        const values: any[] = [];
+
+        if (data.username) {
+            setClause.push('nombreUsuario = ?');
+            values.push(data.username);
+        }
+        if (data.lastname) {
+            setClause.push('apellido = ?');
+            values.push(data.lastname);
+        }
+        if (data.edad) {
+            setClause.push('edad = ?');
+            values.push(data.edad);
+        }
+        if (data.email) {
+            setClause.push('email = ?');
+            values.push(data.email);
+        }
+        if (data.telefono) {
+            setClause.push('telefono = ?');
+            values.push(data.telefono);
+        }
+        if (data.direccion) {
+            setClause.push('direccion = ?');
+            values.push(data.direccion);
+        }
+        
+        // Si no hay ningún campo para actualizar, lanzamos un error
+        if (setClause.length === 0) {
+            throw new Error('No hay datos para actualizar.');
+        }
+
+        // Añadimos el ID al final de los valores
+        values.push(idUsuario);
+
+        // Construye la consulta SQL
+        const query = `UPDATE usuarios SET ${setClause.join(', ')} WHERE idUsuario = ?`;
+
+        // Ejecuta la consulta con los valores dinámicos
+        await conexion.query(query, values);
+    } catch (error) {
+        console.error('Error al actualizar los datos del usuario:', error);
+        throw error;
+    } finally {
+        conexion.release(); // Liberar la conexión
+    }
+}
