@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { obtenerUsuarios } from '../services/usuarioServices';
 import authMiddleware from '../middleware/authMiddleware';
-import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId, actualizarImagenPerfil } from '../models/usuarioModel';
+import { obtenerPorNombre, obtenerPorCorreo, SignUp, obtenerUsuarioPorId, actualizarImagenPerfil, obtenerImagenPerfil } from '../models/usuarioModel';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import fs from 'fs';
+import { error } from 'console';
+
 
 interface DatosSeguros {
     //Se resiven dos pora el manejo del login
@@ -134,40 +137,47 @@ export const actualizarPerfil = async (req: Request, res: Response): Promise<voi
     }
 
     try {
-        // Genera la URL pública de la imagen
-        let publicImagePath = path.join('/images', profileImage);
+        // Obtener la imagen de perfil anterior desde la base de datos
+        const imagenAnterior = await obtenerImagenPerfil(Number(idUsuario));  
 
-        // Reemplazar las barras invertidas por barras diagonales
-        publicImagePath = publicImagePath.replace(/\\/g, '/');
+        if (imagenAnterior) {
+            const uploadPath = path.resolve(__dirname, '../../private/image/imageUser');  // Ruta base del backend
+            let imagenPathAnterior = path.join(uploadPath, imagenAnterior);  // Ruta completa del archivo anterior
 
-        // Actualiza la imagen en la base de datos
-        await actualizarImagenPerfil(Number(idUsuario), publicImagePath); // Aquí actualizas la base de datos
+            // Asegúrate de que la ruta no tenga una carpeta extra 'images'
+            if (imagenAnterior.includes('images')) {
+                //Si lo tiene se lo reempaza
+                imagenPathAnterior = path.join(uploadPath, imagenAnterior.replace('images/', ''));
+            }
 
-        // Responde con la URL pública
+            // Verifica si el archivo realmente existe en el sistema de archivos
+            if (fs.existsSync(imagenPathAnterior)) {
+                fs.unlinkSync(imagenPathAnterior);  // Eliminar la imagen anterior
+            } else {
+            }
+        }
+
+        // Genera la URL pública de la nueva imagen
+        let publicImagePath = path.join('/images', profileImage);  // Para usar en la URL pública
+        publicImagePath = publicImagePath.replace(/\\/g, '/');  // Asegura la ruta correcta en los -> /
+
+        // Actualiza la imagen de perfil en la base de datos
+        await actualizarImagenPerfil(Number(idUsuario), publicImagePath);
+
+        // Responde con la URL pública de la nueva imagen
         res.status(200).json({
             message: 'Imagen de perfil actualizada correctamente.',
-            profileImage: publicImagePath,  // Responde con 'profileImage'
+            profileImage: publicImagePath,
         });
+        
     } catch (error) {
         console.error('Error al actualizar la imagen de perfil:', error);
         res.status(500).json({ message: 'Error al actualizar la imagen de perfil.' });
     }
 };
 
-
-// Función prueba: Ver todos los usuarios
-async function verUsuarios(req: Request, res: Response): Promise<void> {
-    try {
-        const usuarios = await obtenerUsuarios();
-        res.status(200).json(usuarios);
-    } catch (error) {
-        console.error('Error al obtener todos los usuarios:', error);
-        res.status(500).send('Error interno del servidor');
-    }
-}
 export {
     loginUsuario,
     SignUpNewUser,
-    obtenerDatosUsuario,
-    verUsuarios
+    obtenerDatosUsuario,   
 };

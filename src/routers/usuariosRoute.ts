@@ -1,6 +1,6 @@
 //usuariosRoute.js
 import { Router } from "express";
-import { actualizarPerfil, loginUsuario, obtenerDatosUsuario, SignUpNewUser, verUsuarios } from "../controller/usuariosController";
+import { actualizarPerfil, loginUsuario, obtenerDatosUsuario, SignUpNewUser} from "../controller/usuariosController";
 import { decryptMiddleware } from "../middleware/decrypt";
 import verifyMiddleware from "../middleware/verifyMiddleware";
 import upload from "../middleware/imageMiddleware";
@@ -19,7 +19,5 @@ router.post('/signUpUsuario', SignUpNewUser);
 router.get('/obtenerDatosUsuario', verifyMiddleware, obtenerDatosUsuario);
 // Ruta para la actualización de datos (por ahora solo se esta mandando la imagen de perfil)
 router.put('/updateDataUser/:idUsuario', upload.single('profileImage'), actualizarPerfil);
-
-router.get('/verUsuarios', verUsuarios); // Usa la función verUsuarios
 
 export default router;

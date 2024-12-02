@@ -124,3 +124,23 @@ export async function actualizarImagenPerfil(idUsuario: number, profileImage: st
         conexion.release();
     }
 }
+
+// Función para obtener la imagen de perfil por ID de usuario
+export async function obtenerImagenPerfil(idUsuario: number): Promise<string | null> {
+    const conexion: PoolConnection = await obtenerConexion(); // Obtén la conexión a la base de datos
+    try {
+        // Realiza la consulta para obtener la imagen de perfil del usuario
+        const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
+            'SELECT perfilImagen FROM usuarios WHERE idUsuario = ?;',
+            [idUsuario]
+        );
+
+        // Si se encuentra el usuario, retorna la URL de la imagen; de lo contrario, retorna null
+        return results.length > 0 ? results[0].perfilImagen : null;
+    } catch (error) {
+        console.error('Error al obtener la imagen de perfil:', error);
+        throw error; // Lanzar el error para ser manejado por la capa superior
+    } finally {
+        conexion.release(); // Liberar la conexión una vez finalizado
+    }
+}
