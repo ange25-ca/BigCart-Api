@@ -10,7 +10,7 @@ interface Usuario extends RowDataPacket {
     age: number;
     email: string;
     phonenumber: number;
-    adress: string;
+    address: string;
     password: string;
     correo: string;
     pass: string;
@@ -37,13 +37,13 @@ export async function obtenerPorNombre(username: string): Promise<Usuario | null
 
 // Registrar un nuevo usuario
 export async function SignUp(username: string, lastname: string, age: number, email:string, 
-    phonenumber:number, adress: string, password: string): Promise<void> {
+    phonenumber:number, address: string, password: string): Promise<void> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         // Insertar usuario en la base de datos
         await conexion.query(
             'INSERT INTO usuarios (nombreUsuario, apellido, edad, email, telefono, direccion, contraseña) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-            [username, lastname, age, email, phonenumber, adress, password]
+            [username, lastname, age, email, phonenumber, address, password]
         );
     } catch (error) {
         console.error('Error al insertar usuario en el modelo:', error);
@@ -150,8 +150,8 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
     lastname?: string, 
     edad?: number, 
     email?: string, 
-    telefono?: number, 
-    direccion?: string, 
+    phonenumber?: number, 
+    address?: string, 
     profileImage?: string }): Promise<void> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
@@ -175,15 +175,16 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
             setClause.push('email = ?');
             values.push(data.email);
         }
-        if (data.telefono) {
+        if (data.phonenumber) {
             setClause.push('telefono = ?');
-            values.push(data.telefono);
+            values.push(data.phonenumber);
         }
-        if (data.direccion) {
+        if (data.address) {
             setClause.push('direccion = ?');
-            values.push(data.direccion);
+            values.push(data.address);
         }
-        
+        console.log(data); // Verifica qué datos están llegando al backend
+
         // Si no hay ningún campo para actualizar, lanzamos un error
         if (setClause.length === 0) {
             throw new Error('No hay datos para actualizar.');
@@ -191,6 +192,7 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
 
         // Añadimos el ID al final de los valores
         values.push(idUsuario);
+        console.log(data); // Verifica qué datos están llegando al backend
 
         // Construye la consulta SQL
         const query = `UPDATE usuarios SET ${setClause.join(', ')} WHERE idUsuario = ?`;
@@ -198,7 +200,7 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
         // Ejecuta la consulta con los valores dinámicos
         await conexion.query(query, values);
     } catch (error) {
-        console.error('Error al actualizar los datos del usuario:', error);
+        console.warn('Error al actualizar los datos del usuario:', error);
         throw error;
     } finally {
         conexion.release(); // Liberar la conexión
