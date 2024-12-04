@@ -10,7 +10,7 @@ import { error } from 'console';
 
 interface DatosSeguros {
     //Se resiven dos pora el manejo del login
-    username: string;
+    email: string;
     password: string;
 }
 
@@ -26,16 +26,16 @@ async function  loginUsuario(req: Request, res: Response): Promise<void> {
     try {
         //Se llama al middleware para desencriptar los datos
         const decryptedData = await authMiddleware.verificarLogin(dataSegura); 
-        const { username, password } = decryptedData;
+        const { email, password } = decryptedData;
 
         // Busca el usuario en la base de datos por el nombre de usuario
-        const usuario = await obtenerPorNombre(username);
+        const usuario = await obtenerPorNombre(email);
 
         // Verifica las credenciales
         if (usuario && usuario.contraseña === password) {
             const token = jwt.sign({ userId: usuario.idUsuario }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
             res.status(200).json({
-                message: `Bienvenido, ${username}!`,
+                message: `Bienvenido, ${email}!`,
                 token,
                 userId: usuario.idUsuario,
             });

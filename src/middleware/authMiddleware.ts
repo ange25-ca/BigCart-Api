@@ -1,4 +1,3 @@
-
 import { decryptData } from "./decrypt"; 
 
 interface UsuarioPayload {
@@ -49,19 +48,19 @@ const authMiddleare = {
     },
 
     // Función para verificar solo los datos necesarios para login (username y password)
-    verificarLogin: async function (dataSegura: { username: string; password: string }): Promise<{ username: string; password: string }> {
-        const { username: encryptedUsername, password: encryptedPassword } = dataSegura;
+    verificarLogin: async function (dataSegura: { email: string; password: string }): Promise<{ email: string; password: string }> {
+        const { email: encryptedEmail, password: encryptedPassword } = dataSegura;
 
         // Asegúrate de que username y password cifrados existen
-        if (!encryptedUsername || !encryptedPassword) {
+        if (!encryptedEmail || !encryptedPassword) {
             throw new Error("Datos insuficientes para procesar");
         }
 
         // Desencripta username y password
-        const username = await decryptData(encryptedUsername);
+        const email = await decryptData(encryptedEmail);
         const password = await decryptData(encryptedPassword);
 
-        return { username, password };
+        return { email, password };
     },
 };
 
