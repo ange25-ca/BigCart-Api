@@ -1,8 +1,10 @@
 // creamos el modelo donde consumiremos la bd, tendra funcionalidades como
 // ver productos, ver por productos mediante su ID.
 
+
 import { PoolConnection, RowDataPacket } from "mysql2/promise";
 import { obtenerConexion } from "../databases/conexion";
+
 
 //creamos una interface para el producto
 interface Producto extends RowDataPacket {
@@ -16,6 +18,7 @@ interface Producto extends RowDataPacket {
   stock: number;
   idCategoria: number;
 }
+
 
 // Función asincrónica que devuelve una lista de productos como un array de objetos de tipo Producto
 export async function allProductos(): Promise<Producto[]> {
@@ -39,6 +42,7 @@ export async function allProductos(): Promise<Producto[]> {
   }
 }
 
+
 // Función para obtener un producto específico por ID
 export async function obtenerProductoPorId(id: number): Promise<any> {
   const conexion: PoolConnection = await obtenerConexion();
@@ -58,6 +62,7 @@ export async function obtenerProductoPorId(id: number): Promise<any> {
   }
 }
 
+
 export async function actulizarStock(id: number, stock: number) {
   const conexion: PoolConnection = await obtenerConexion();
   try {
@@ -68,10 +73,12 @@ export async function actulizarStock(id: number, stock: number) {
     return resultados;
   } catch (error) {
 
+
   }
 }
 
-// buscar por categorias 
+
+// buscar por categorias
 export async function buscarPorCategoria(categoria: number) {
   const conexion: PoolConnection = await obtenerConexion();
   try {
@@ -88,4 +95,15 @@ export async function buscarPorCategoria(categoria: number) {
   } finally{
     conexion.release();
   }
+}
+
+
+// Obtener el stock de un producto
+export async function getProductStock(idProducto: number): Promise<number> {
+  const conexion: PoolConnection = await obtenerConexion();
+  const [rows]: any = await conexion.query(
+      'SELECT stock FROM productos WHERE idProducto = ?',
+      [idProducto]
+  );
+  return rows.length > 0 ? rows[0].stock : null;
 }
