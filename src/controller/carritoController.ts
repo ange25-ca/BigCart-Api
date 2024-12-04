@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { agregarAlCarrito, allCartProductsService} from '../services/carritoServices';
-
+import { agregarAlCarrito, allCartProductsService, getQuantityInCart, updateQuantityproduct} from '../services/carritoServices';
+import {getStock} from '../services/productosServices'
 interface CarritoProducto {
     idProducto: number;
     Cantidad: number;
@@ -24,14 +24,17 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
             return;
         }
 
+
         const cantidadNumerica = Number(cantidad);
         if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
             res.status(400).send('La cantidad debe ser un número válido mayor a 0');
             return;
         }
 
+
         // Llamar al servicio para agregar el producto al carrito
         await agregarAlCarrito(Number(idCliente), Number(idProducto), cantidadNumerica);
+
 
         // Responder con éxito
         res.status(200).json({
@@ -43,18 +46,23 @@ export async function addToCart(req: Request, res: Response): Promise<void> {
     }
 }
 
+
 export async function viewAllCartProductos(req: Request, res: Response): Promise<void> {
     try {
         const idCart = parseInt(req.params.idCart, 10);
 
+
         console.log("Este es el idCarrito:", idCart);
         const carritoData: CarritoProducto[] = await allCartProductsService(idCart);
+
+
 
 
     // Separar detalles del carrito e items
     if (carritoData.length > 0) {
         const { idCarrito, idCliente, totalCarrito, estadoCarrito } = carritoData[0];
         const detallesCarrito = { idCarrito, idCliente, totalCarrito, estadoCarrito };
+
 
         const itemsCarrito = carritoData.map((item: CarritoProducto) => ({
             idProducto: item.idProducto,
@@ -65,6 +73,7 @@ export async function viewAllCartProductos(req: Request, res: Response): Promise
             imagen: item.imagenUrl,
         }));
 
+
         res.json({ detallesCarrito, itemsCarrito });
     } else {
         res.status(404).json({ message: "Carrito no encontrado" });
@@ -72,5 +81,57 @@ export async function viewAllCartProductos(req: Request, res: Response): Promise
     } catch (error) {
         console.error('Error al obtener productos del carrito:', error);
         res.status(500).send('Error al obtener productos del carrito');
+    }
+}
+
+
+
+
+
+
+// Actualizar cantidad en el carrito
+export async function updateCartQuantity(req: Request, res: Response): Promise<void> {
+    const { cantidad, idCarrito, idProducto } = req.body;
+
+
+    try {
+        // Validar que los datos necesarios estén presentes
+        if (!idCarrito || !idProducto || !cantidad) {
+            res.status(400).json({ message: 'Faltan datos en la solicitud.' });
+            return;
+        }
+
+
+        // Obtener stock disponible del producto
+        const stockResult = await getStock(idProducto);
+
+
+        if (!stockResult) {
+            res.status(404).json({ message: 'Producto no encontrado.' });
+            return;
+        }
+        const currentQuantityInCart = await getQuantityInCart(idCarrito, idProducto);
+
+
+        // Calcular la nueva cantidad total en el carrito
+        const newTotalQuantity = currentQuantityInCart + cantidad;
+
+
+        // Validar si la nueva cantidad excede el stock
+        if (newTotalQuantity > stockResult) {
+            res.status(400).json({
+                message: `La cantidad total solicitada (${newTotalQuantity}) excede el stock disponible (${stockResult}).`,
+            });
+            return;
+        } else{
+            await updateQuantityproduct(cantidad, idCarrito, idProducto );
+        }
+
+
+        // Actualizar la cantidad en carritoProducto
+        res.status(200).json({ message: 'Cantidad actualizada correctamente.' });
+    } catch (error) {
+        console.error('Error al actualizar la cantidad en el carrito:', error);
+        res.status(500).json({ message: 'Error al procesar la solicitud.' });
     }
 }

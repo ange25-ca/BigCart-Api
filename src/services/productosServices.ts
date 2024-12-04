@@ -1,4 +1,4 @@
-import { allProductos, obtenerProductoPorId, buscarPorCategoria } from "../models/productoModel";
+import { allProductos, obtenerProductoPorId, buscarPorCategoria, getProductStock } from "../models/productoModel";
 interface ProductoResponse {
     idProducto: number; // ID del producto, coincidente con la tabla
     sku: string; // Código SKU del producto
@@ -11,6 +11,7 @@ interface ProductoResponse {
     idCategoria: number; // ID de la categoría (clave foránea)
 }
 
+
 export async function obtenerProductos(): Promise<any> {
     try {
         const productos = await allProductos();
@@ -19,6 +20,7 @@ export async function obtenerProductos(): Promise<any> {
         return error;
     }
 }
+
 
 export async function obtenerPorId(id : number): Promise<any> {
     try {
@@ -29,6 +31,7 @@ export async function obtenerPorId(id : number): Promise<any> {
     }
 }
 
+
 export async function getForCategoria(categoria: number): Promise<any> {
     try {
         console.log('categoria en servicio:' + categoria);
@@ -37,5 +40,18 @@ export async function getForCategoria(categoria: number): Promise<any> {
     } catch (error) {
         console.log('Error al obtener productos por categoria')
         throw Error;
+    }
+}
+
+
+// Obtener el stock de un producto
+export async function getStock(idProducto: number): Promise<number> {
+    try {
+        const stock = await getProductStock(idProducto);
+        return stock;
+   
+    } catch (error) {
+        console.log('Error al obtener stock');
+        throw error;
     }
 }
