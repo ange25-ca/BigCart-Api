@@ -43,7 +43,7 @@ export async function updateAddProductCart(cantidad: number,  idCarrito: number,
     try {
         // sql para poder actualizar la cantidad del producto
         await conexion.query('UPDATE carritoProducto SET Cantidad = Cantidad + ? WHERE idCarrito = ? AND idProducto = ?',[cantidad, idCarrito, idproduct]);
-
+        _actualizarTotalCarrito(idCarrito);
 
     } catch (error) {
         console.error("Error al actualizar la cantidad del producto en el carrito", error);
@@ -62,3 +62,24 @@ export async function getCurrentQuantityInCart(idCarrito: number, idProducto: nu
       // Si no hay ningún producto en el carrito, devolvemos 0
       return result.length > 0 ? result[0].Cantidad : 0;
     }
+
+    const _actualizarTotalCarrito = async (idCarrito: number): Promise<void> => {
+        const conexion: PoolConnection = await obtenerConexion();
+        
+        // Consulta para obtener el total
+        const [rows]: any = await conexion.query(`
+          SELECT SUM(cp.cantidad * p.precio) AS total
+          FROM carritoproducto cp
+          JOIN productos p ON cp.idProducto = p.idProducto
+          WHERE cp.idCarrito = ?;
+        `, [idCarrito]);
+        
+        // Validar el resultado para evitar problemas si es null
+        const total = rows[0]?.total || 0; // Si el total es null, asigna 0
+        
+        // Actualizar el total en la tabla carrito
+        await conexion.query(`
+          UPDATE carritocompras SET total = ? WHERE idCarrito = ?
+        `, [total, idCarrito]);
+    };
+    
