@@ -151,8 +151,7 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
     edad?: number, 
     email?: string, 
     phonenumber?: number, 
-    address?: string, 
-    profileImage?: string }): Promise<void> {
+    address?: string }): Promise<void> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         // Genera las partes de la consulta dinámica
@@ -183,16 +182,14 @@ export async function actualizarUsuario(idUsuario: number, data: { username?: st
             setClause.push('direccion = ?');
             values.push(data.address);
         }
-        console.log(data); // Verifica qué datos están llegando al backend
 
-        // Si no hay ningún campo para actualizar, lanzamos un error
         if (setClause.length === 0) {
-            throw new Error('No hay datos para actualizar.');
+            // Cambiar el enfoque: si no hay campos para actualizar, simplemente retornar sin error.
+            return;
         }
 
         // Añadimos el ID al final de los valores
         values.push(idUsuario);
-        console.log(data); // Verifica qué datos están llegando al backend
 
         // Construye la consulta SQL
         const query = `UPDATE usuarios SET ${setClause.join(', ')} WHERE idUsuario = ?`;
