@@ -16,13 +16,13 @@ interface Usuario extends RowDataPacket {
 }
 
 // Obtener usuario por nombre
-export async function obtenerPorNombre(username: string): Promise<Usuario | null> {
+export async function obtenerPorNombre(email: string): Promise<Usuario | null> {
     const conexion: PoolConnection = await obtenerConexion();
     try {
         // Ejecutar la consulta y tipar los resultados como RowDataPacket[]
         const [results] = await conexion.query<Usuario[] & RowDataPacket[]>(
-            'SELECT * FROM usuarios WHERE nombreUsuario = ?;',
-            [username]
+            'SELECT * FROM usuarios WHERE email = ?;',
+            [email]
         );
 
         return results.length > 0 ? results[0] : null;
