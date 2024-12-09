@@ -53,6 +53,17 @@ export async function updateAddProductCart(cantidad: number,  idCarrito: number,
     }
 }
 
+export async function eliminardecarrito(idCarrito: number, idproduct: number) {
+    const conexion: PoolConnection = await obtenerConexion();
+    try{
+        await conexion.query('DELETE FROM carritoproducto WHERE idCarrito = ? AND  idProducto = ?',[idCarrito,idproduct]);
+        _actualizarTotalCarrito(idCarrito);
+    } catch (error){
+        throw error;
+    } finally{
+        conexion.release();
+    }
+}
 
 // Obtener cantidad actual de un producto en el carrito
 export async function getCurrentQuantityInCart(idCarrito: number, idProducto: number): Promise<number> {
