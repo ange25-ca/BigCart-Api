@@ -73,7 +73,6 @@ export async function getCurrentQuantityInCart(idCarrito: number, idProducto: nu
       // Si no hay ningún producto en el carrito, devolvemos 0
       return result.length > 0 ? result[0].Cantidad : 0;
     }
-    
 
     const _actualizarTotalCarrito = async (idCarrito: number): Promise<void> => {
         const conexion: PoolConnection = await obtenerConexion();
@@ -93,6 +92,5 @@ export async function getCurrentQuantityInCart(idCarrito: number, idProducto: nu
         await conexion.query(`
           UPDATE carritocompras SET total = ? WHERE idCarrito = ?
         `, [total, idCarrito]);
-        
     };
     
