@@ -13,7 +13,7 @@ const pool : Pool = mysql2.createPool({
     database: process.env.ACCESS_DB_DATABASE,
     port: Number(process.env.ACCESS_DB_PORT),
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 100,
     queueLimit: 0
 });
 

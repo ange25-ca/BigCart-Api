@@ -53,6 +53,17 @@ export async function updateAddProductCart(cantidad: number,  idCarrito: number,
     }
 }
 
+export async function eliminardecarrito(idCarrito: number, idproduct: number) {
+    const conexion: PoolConnection = await obtenerConexion();
+    try{
+        await conexion.query('DELETE FROM carritoproducto WHERE idCarrito = ? AND  idProducto = ?',[idCarrito,idproduct]);
+        _actualizarTotalCarrito(idCarrito);
+    } catch (error){
+        throw error;
+    } finally{
+        conexion.release();
+    }
+}
 
 // Obtener cantidad actual de un producto en el carrito
 export async function getCurrentQuantityInCart(idCarrito: number, idProducto: number): Promise<number> {
@@ -62,6 +73,7 @@ export async function getCurrentQuantityInCart(idCarrito: number, idProducto: nu
       // Si no hay ningún producto en el carrito, devolvemos 0
       return result.length > 0 ? result[0].Cantidad : 0;
     }
+    
 
     const _actualizarTotalCarrito = async (idCarrito: number): Promise<void> => {
         const conexion: PoolConnection = await obtenerConexion();
@@ -81,5 +93,6 @@ export async function getCurrentQuantityInCart(idCarrito: number, idProducto: nu
         await conexion.query(`
           UPDATE carritocompras SET total = ? WHERE idCarrito = ?
         `, [total, idCarrito]);
+        
     };
     
