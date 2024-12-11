@@ -42,9 +42,7 @@ export async function updateAddProductCart(cantidad: number,  idCarrito: number,
     const conexion: PoolConnection = await obtenerConexion();
     try {
         // sql para poder actualizar la cantidad del producto
-        await conexion.query('UPDATE carritoProducto SET Cantidad = Cantidad + ? WHERE idCarrito = ? AND idProducto = ?',[cantidad, idCarrito, idproduct]);
-        _actualizarTotalCarrito(idCarrito);
-
+        await conexion.query('call bigcart.actualizarCantidadCarrito(?, ?, ?);',[idCarrito, idproduct,cantidad,]);
     } catch (error) {
         console.error("Error al actualizar la cantidad del producto en el carrito", error);
         throw error;
@@ -65,14 +63,14 @@ export async function eliminardecarrito(idCarrito: number, idproduct: number) {
     }
 }
 
-// Obtener cantidad actual de un producto en el carrito
-export async function getCurrentQuantityInCart(idCarrito: number, idProducto: number): Promise<number> {
-    const conexion: PoolConnection = await obtenerConexion();  // Suponiendo que tienes un método `executeQuery` para hacer consultas SQL
-      const [result]: any = await conexion.query('SELECT Cantidad FROM carritoProducto WHERE idCarrito = ? AND idProducto = ?', [idCarrito, idProducto]);
+// // Obtener cantidad actual de un producto en el carrito
+// export async function getCurrentQuantityInCart(idCarrito: number, idProducto: number): Promise<number> {
+//     const conexion: PoolConnection = await obtenerConexion();  // Suponiendo que tienes un método `executeQuery` para hacer consultas SQL
+//       const [result]: any = await conexion.query('SELECT Cantidad FROM carritoProducto WHERE idCarrito = ? AND idProducto = ?', [idCarrito, idProducto]);
    
-      // Si no hay ningún producto en el carrito, devolvemos 0
-      return result.length > 0 ? result[0].Cantidad : 0;
-    }
+//       // Si no hay ningún producto en el carrito, devolvemos 0
+//       return result.length > 0 ? result[0].Cantidad : 0;
+//     }
 
     const _actualizarTotalCarrito = async (idCarrito: number): Promise<void> => {
         const conexion: PoolConnection = await obtenerConexion();

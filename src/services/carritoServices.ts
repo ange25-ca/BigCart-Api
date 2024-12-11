@@ -1,4 +1,4 @@
-import { agregarProductoAlCarrito, allCartProducts, getCurrentQuantityInCart, updateAddProductCart,eliminardecarrito} from '../models/carritoModels';
+import { agregarProductoAlCarrito, allCartProducts, updateAddProductCart,eliminardecarrito} from '../models/carritoModels';
 
 
 
@@ -22,11 +22,6 @@ export async function updateQuantityproduct(cantidad: number, idCarrito: number,
     return update;
 }
 
-
-export async function getQuantityInCart(idCarrito: number, idProducto: number) {
-    const cantidad = await getCurrentQuantityInCart(idCarrito,idProducto);
-    return cantidad;
-}
 
 export async function eliminarunproducto(idCarrito: number,  idproduct: number) {
     await eliminardecarrito(idCarrito, idproduct);
