@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { agregarAlCarrito, allCartProductsService, getQuantityInCart, updateQuantityproduct, eliminarunproducto} from '../services/carritoServices';
+import { agregarAlCarrito, allCartProductsService, updateQuantityproduct, eliminarunproducto} from '../services/carritoServices';
 import {getStock} from '../services/productosServices'
 interface CarritoProducto {
     idProducto: number;
@@ -102,31 +102,8 @@ export async function updateCartQuantity(req: Request, res: Response): Promise<v
         }
 
 
-        // Obtener stock disponible del producto
-        const stockResult = await getStock(idProducto);
-
-
-        if (!stockResult) {
-            res.status(404).json({ message: 'Producto no encontrado.' });
-            return;
-        }
-        const currentQuantityInCart = await getQuantityInCart(idCarrito, idProducto);
-
-
-        // Calcular la nueva cantidad total en el carrito
-        const newTotalQuantity = currentQuantityInCart + cantidad;
-
-
-        // Validar si la nueva cantidad excede el stock
-        if (newTotalQuantity > stockResult) {
-            res.status(400).json({
-                message: `La cantidad total solicitada (${newTotalQuantity}) excede el stock disponible (${stockResult}).`,
-            });
-            return;
-        } else{
             await updateQuantityproduct(cantidad, idCarrito, idProducto );
-        }
-
+        
 
         // Actualizar la cantidad en carritoProducto
         res.status(200).json({ message: 'Cantidad actualizada correctamente.' });
