@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { agregarAlCarrito, allCartProductsService, updateQuantityproduct, eliminarunproducto} from '../services/carritoServices';
+import { agregarAlCarrito, allCartProductsService, updateQuantityproduct, eliminarunproducto,desactivarCarrito} from '../services/carritoServices';
 import {getStock} from '../services/productosServices'
+import { promises } from 'dns';
 interface CarritoProducto {
     idProducto: number;
     Cantidad: number;
@@ -126,5 +127,20 @@ export async function eliminarXProducto(req: Request, res: Response): Promise<vo
         res.status(200).json({ message: 'Producto eliminado correctamente.' });
     } catch{ 
         res.status(500).json({ message: 'Error al procesar la solicitud.' });
+    }
+}
+
+export async function vaciarCart(req: Request, res: Response): Promise<void>{
+    const { idCarrito } = req.body;
+    try {
+        // Validar que los datos necesarios estén presentes
+        if (!idCarrito) {
+            res.status(400).json({ message: 'Faltan datos en la solicitud.' });
+        }
+        await desactivarCarrito(idCarrito);
+    } catch(error){
+        console.error('Error al vaciar el carrito:', error);
+        res.status(500).json({ message: 'Error al procesar la solicitud.' });
+        
     }
 }

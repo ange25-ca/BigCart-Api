@@ -1,4 +1,4 @@
-import { agregarProductoAlCarrito, allCartProducts, updateAddProductCart,eliminardecarrito} from '../models/carritoModels';
+import { agregarProductoAlCarrito, allCartProducts, updateAddProductCart,eliminardecarrito, vaciarCarrito} from '../models/carritoModels';
 
 
 
@@ -26,4 +26,8 @@ export async function updateQuantityproduct(cantidad: number, idCarrito: number,
 export async function eliminarunproducto(idCarrito: number,  idproduct: number) {
     await eliminardecarrito(idCarrito, idproduct);
     
+}
+
+export async function desactivarCarrito(idCarrito: number){
+    await vaciarCarrito(idCarrito);
 }

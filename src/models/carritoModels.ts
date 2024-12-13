@@ -91,4 +91,20 @@ export async function eliminardecarrito(idCarrito: number, idproduct: number) {
           UPDATE carritocompras SET total = ? WHERE idCarrito = ?
         `, [total, idCarrito]);
     };
-    
+
+    // funcion para vaciar carrito
+    export async function vaciarCarrito(idCarrito: number): Promise<void> {
+        const conexion: PoolConnection = await obtenerConexion();
+        try{
+            //vamos a cambiar el estado del carrito, de activo a desactivado ya que el carrito seguira estando para futuramente
+            //ver lo que el usuario a seleccionado para hacerle recomendaciones
+            await conexion.query('UPDATE carritocompras SET estadoCarrito = ? WHERE idCarrito = ?', ['desactivado', idCarrito]);
+            
+        }
+        catch(error){
+            throw error;
+
+        } finally{
+            conexion.release();
+        }
+    }
