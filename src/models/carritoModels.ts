@@ -108,3 +108,16 @@ export async function eliminardecarrito(idCarrito: number, idproduct: number) {
             conexion.release();
         }
     }
+
+    //función para poder llamar el storage procedure que envia la id de carrito para poder comprar el carrito
+    export async function comprarCarrito(idCarrito: number): Promise<void> {
+        const conexion: PoolConnection = await obtenerConexion();
+        try{
+            //llamamos al procedimiento almacenado
+            await conexion.query('CALL ProcesarCarrito(?);', [idCarrito]);
+        } catch(error){
+            throw error;
+            } finally{
+                conexion.release();
+        }
+    }

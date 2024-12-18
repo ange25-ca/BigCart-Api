@@ -1,4 +1,4 @@
-import { agregarProductoAlCarrito, allCartProducts, updateAddProductCart,eliminardecarrito, vaciarCarrito} from '../models/carritoModels';
+import { agregarProductoAlCarrito, allCartProducts, updateAddProductCart,eliminardecarrito, vaciarCarrito, comprarCarrito} from '../models/carritoModels';
 
 
 
@@ -30,4 +30,8 @@ export async function eliminarunproducto(idCarrito: number,  idproduct: number) 
 
 export async function desactivarCarrito(idCarrito: number){
     await vaciarCarrito(idCarrito);
+}
+
+export async function compraCarrito(idCarrito:number) {
+    await comprarCarrito(idCarrito);
 }

@@ -11,5 +11,6 @@ router.use('/user', usuariosRoute);
 router.use('/productos', ProductosRoute);
 //rutas para el carrito
  router.use('/carrito', carritoRoute);
+ 
 
 export default router;
