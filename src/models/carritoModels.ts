@@ -42,7 +42,7 @@ export async function updateAddProductCart(cantidad: number,  idCarrito: number,
     const conexion: PoolConnection = await obtenerConexion();
     try {
         // sql para poder actualizar la cantidad del producto
-        await conexion.query('call bigcart.actualizarCantidadCarrito(?, ?, ?);',[idCarrito, idproduct,cantidad,]);
+        await conexion.query('call actualizarCantidadCarrito(?, ?, ?);',[idCarrito, idproduct,cantidad,]);
     } catch (error) {
         console.error("Error al actualizar la cantidad del producto en el carrito", error);
         throw error;
