@@ -28,7 +28,7 @@ export async function allProductos(): Promise<Producto[]> {
     // Realiza una consulta SQL para seleccionar todos los registros de la tabla "productos"
     // y almacena los resultados en la variable "resultados"
     const [resultados] = await conexion.query<Producto[]>(
-      "SELECT * FROM bigcart.productos;"
+      "SELECT * FROM productos;"
     );
     // Retorna los resultados de la consulta como un array de productos
     return resultados;
@@ -49,7 +49,7 @@ export async function obtenerProductoPorId(id: number): Promise<any> {
   try {
     console.log(id);
     const [resultados] = await conexion.query<Producto[]>(
-      "SELECT * FROM bigcart.productos WHERE idProducto = ?;",
+      "SELECT * FROM productos WHERE idProducto = ?;",
       [id]
     );
     // Si se encuentra un producto, retornarlo; de lo contrario, retornar null
@@ -67,7 +67,7 @@ export async function actulizarStock(id: number, stock: number) {
   const conexion: PoolConnection = await obtenerConexion();
   try {
     const [resultados] = await conexion.query(
-      "UPDATE bigcart.productos SET stock = ? WHERE idProducto = ?",
+      "UPDATE productos SET stock = ? WHERE idProducto = ?",
       [stock, id]
     );
     return resultados;
@@ -84,7 +84,7 @@ export async function buscarPorCategoria(categoria: number) {
   try {
     console.log('categoria en modelo:' + categoria);
     const [resultados] = await conexion.query<Producto[]>(
-      "SELECT p.*, c.nombreCategoria FROM bigcart.productos AS p JOIN bigcart.categoria AS c ON p.idCategoria = c.idCategoria WHERE p.idCategoria = ?;",
+      "SELECT p.*, c.nombreCategoria FROM productos AS p JOIN categoria AS c ON p.idCategoria = c.idCategoria WHERE p.idCategoria = ?;",
       [categoria]
     );
     // si encuentra resultados retornar si no enviar error
