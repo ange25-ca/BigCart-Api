@@ -21,10 +21,12 @@ export async function viewAllShopProductos(req: Request, res: Response): Promise
     // Obtener datos desde la vista `shopview`
     const shopData: DetalleShop[] = await shopview(idCliente);
 
-    if (shopData.length === 0) {
-      res.status(404).json({ message: "No se encontraron compras para el cliente." });
-      return;
-    }
+        // Validar si shopData es un array y tiene contenido
+        if (!Array.isArray(shopData) || shopData.length === 0) {
+          res.status(404).json({ message: "No se encontraron compras para el cliente." });
+          return;
+        }
+
 
     // Agrupar los productos por idCompra
     const compras = shopData.reduce((acc, current) => {
